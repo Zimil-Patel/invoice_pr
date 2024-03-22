@@ -22,27 +22,21 @@ final PdfColor s = const PdfColor.fromInt(0xAAB4D4FF);
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-
     Bill bill = Bill();
     bill.refreshData();
 
     return Scaffold(
       backgroundColor: bgColor,
-
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: primary,
         shape: const CircleBorder(),
-        onPressed: (){
-
-          Navigator.of(context).pushNamed('/add').then((value) => setState(() {
-            
-          }));
-
+        onPressed: () {
+          Navigator.of(context)
+              .pushNamed('/add')
+              .then((value) => setState(() {}));
         },
         child: const Icon(Icons.add),
       ),
-
       appBar: AppBar(
         leading: const Icon(
           Icons.menu,
@@ -62,7 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  productBox(bill: bill,),
+                  productBox(
+                    bill: bill,
+                  ),
                 ],
               ),
             ),
@@ -82,10 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: () async {
-
                 double subTotal = 0;
-                for(int i = 0; i < data.length; i++){
-                  subTotal += bill.productList![i].price! * bill.productList![i].quantity!;
+                for (int i = 0; i < data.length; i++) {
+                  subTotal += bill.productList![i].price! *
+                      bill.productList![i].quantity!;
                 }
 
                 final pdf = pd.Document();
@@ -94,142 +90,164 @@ class _HomeScreenState extends State<HomeScreen> {
                   pageFormat: PdfPageFormat.a4,
                   build: (context) => pd.Column(
                     children: [
-
-                        pd.Row(
-                          children: [
-                            pd.Expanded(
-                              child: pd.Container(
-                                alignment: pd.Alignment.centerLeft,
-                                height: 80,
-                                color: s,
-                                child: pd.Text('  Invoice', style: pd.TextStyle(
-                                  fontWeight: pd.FontWeight.bold,
-                                  fontSize: 30,
-                                  color: PdfColors.white
-                                ),),
+                      pd.Row(
+                        children: [
+                          pd.Expanded(
+                            child: pd.Container(
+                              alignment: pd.Alignment.centerLeft,
+                              height: 80,
+                              color: s,
+                              child: pd.Text(
+                                '  Invoice',
+                                style: pd.TextStyle(
+                                    fontWeight: pd.FontWeight.bold,
+                                    fontSize: 30,
+                                    color: PdfColors.white),
                               ),
                             ),
-
-                            pd.Container(
-                              height: 80,
-                              width: 140,
-                              alignment: pd.Alignment.center,
-                              child: pd.Text('${ subTotal + (subTotal * 18) / 100} Rs.', style: pd.TextStyle(
+                          ),
+                          pd.Container(
+                            height: 80,
+                            width: 140,
+                            alignment: pd.Alignment.center,
+                            child: pd.Text(
+                              '${subTotal + (subTotal * 18) / 100} Rs.',
+                              style: pd.TextStyle(
                                 fontWeight: pd.FontWeight.bold,
                                 fontSize: 20,
-                              ),),
-                              color: p,
+                              ),
                             ),
-                          ],
-                        ),
-
-                        pd.SizedBox(
-                          height: 20
-                        ),
-
-
-
-
-                      pd.SizedBox(
-                          height: 20
+                            color: p,
+                          ),
+                        ],
                       ),
 
-                        //product list and table
-                        pd.Row(
-                          mainAxisAlignment: pd.MainAxisAlignment.start,
-                          children: [
+                      pd.SizedBox(height: 20),
 
-                            pd.Expanded(
-                              child: pd.Column(
-                                children: [
-                                  titleBox('Product Id '),
-                                  ...List.generate(bill.productList!.length, (index) => cellBox(index, '${index + 1}')),
-                                ],
-                              ),
+                      pd.Row(
+                        children: [
+                          pd.Expanded(
+                            child: pd.Column(
+                              crossAxisAlignment: pd.CrossAxisAlignment.start,
+                              children: [
+                                pd.Text('Bill To:'),
+                                pd.Text('Zimil Patel'),
+                                pd.Text('303- B, sundaram, shiddhi Vianayk'),
+                              ],
                             ),
+                          ),
 
-                            pd.Expanded(
-                              child: pd.Column(
-                                crossAxisAlignment: pd.CrossAxisAlignment.start,
-                                children: [
-                                  titleBox('Product Name '),
-                                  ...List.generate(bill.productList!.length, (index) => cellBox(index, '${bill.productList![index].name}')),
-                                ],
-                              ),
+                          pd.Column(
+                            crossAxisAlignment: pd.CrossAxisAlignment.end ,
+                            children: [
+                              pd.Text('General Store'),
+                              pd.Text('104-B'),
+
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      pd.SizedBox(height: 20),
+
+                      //product list and table
+                      pd.Row(
+                        mainAxisAlignment: pd.MainAxisAlignment.start,
+                        children: [
+                          pd.Expanded(
+                            child: pd.Column(
+                              children: [
+                                titleBox('Product Id '),
+                                ...List.generate(bill.productList!.length,
+                                    (index) => cellBox(index, '${index + 1}')),
+                              ],
                             ),
-
-                            pd.Expanded(
-                              child: pd.Column(
-                                crossAxisAlignment: pd.CrossAxisAlignment.start,
-
-                                children: [
-                                  titleBox('Product Quantity '),
-                                  ...List.generate(bill.productList!.length, (index) => cellBox(index, '${bill.productList![index].quantity}')),
-                                ],
-                              ),
+                          ),
+                          pd.Expanded(
+                            child: pd.Column(
+                              crossAxisAlignment: pd.CrossAxisAlignment.start,
+                              children: [
+                                titleBox('Product Name '),
+                                ...List.generate(
+                                    bill.productList!.length,
+                                    (index) => cellBox(index,
+                                        '${bill.productList![index].name}')),
+                              ],
                             ),
-
-                            pd.Expanded(
-                              child: pd.Column(
-                                crossAxisAlignment: pd.CrossAxisAlignment.start,
-
-                                children: [
-                                  titleBox('Product Price '),
-                                  ...List.generate(bill.productList!.length, (index) => cellBox(index, '${bill.productList![index].price! * bill.productList![index].quantity!}')),
-                                ],
-                              ),
+                          ),
+                          pd.Expanded(
+                            child: pd.Column(
+                              crossAxisAlignment: pd.CrossAxisAlignment.start,
+                              children: [
+                                titleBox('Product Quantity '),
+                                ...List.generate(
+                                    bill.productList!.length,
+                                    (index) => cellBox(index,
+                                        '${bill.productList![index].quantity}')),
+                              ],
                             ),
-
-                          ],
-                        ),
-
+                          ),
+                          pd.Expanded(
+                            child: pd.Column(
+                              crossAxisAlignment: pd.CrossAxisAlignment.start,
+                              children: [
+                                titleBox('Product Price '),
+                                ...List.generate(
+                                    bill.productList!.length,
+                                    (index) => cellBox(index,
+                                        '${bill.productList![index].price! * bill.productList![index].quantity!}')),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
 
                       pd.SizedBox(
                         height: 30,
                       ),
 
                       // total stuffs
-                      pd.Row(
-                        mainAxisAlignment: pd.MainAxisAlignment.end,
+                      pd.Column(
+                        crossAxisAlignment: pd.CrossAxisAlignment.end,
                         children: [
-                          //name
-                          pd.Column(
-                            crossAxisAlignment: pd.CrossAxisAlignment.start,
+                          pd.Text('--------------------------------------'),
+                          pd.Row(
+                            mainAxisAlignment: pd.MainAxisAlignment.end,
                             children: [
-                              pd.Text('Subtotal :'),
-                              pd.SizedBox(
-                                height: 8,
-                              ),pd.Text('GST (18%) :'),
-                              pd.SizedBox(
-                                height: 8,
-                              ),
-                              pd.Text('Total :'),
-                            ]
-                          ),
+                              //name
+                              pd.Column(
+                                  crossAxisAlignment:
+                                      pd.CrossAxisAlignment.start,
+                                  children: [
+                                    pd.Text('Subtotal :'),
+                                    pd.SizedBox(
+                                      height: 8,
+                                    ),
+                                    pd.Text('GST (18%) :'),
+                                    pd.SizedBox(
+                                      height: 8,
+                                    ),
+                                    pd.Text('Total :'),
+                                  ]),
 
+                              pd.SizedBox(width: 30),
 
-
-
-
-                          pd.SizedBox(
-                            width: 30
-                          ),
-
-                          //value
-                          pd.Column(
-                            crossAxisAlignment: pd.CrossAxisAlignment.end,
-                            children: [
-
-
-                              pd.Text('$subTotal Rs.'),
-                              pd.SizedBox(
-                                height: 8,
-                              ),pd.Text('${(subTotal * 18) / 100} Rs.'),
-                              pd.SizedBox(
-                                height: 8,
-                              ),
-                              pd.Text('${ subTotal + (subTotal * 18) / 100} Rs.'),
-                            ]
+                              //value
+                              pd.Column(
+                                  crossAxisAlignment: pd.CrossAxisAlignment.end,
+                                  children: [
+                                    pd.Text('$subTotal Rs.'),
+                                    pd.SizedBox(
+                                      height: 8,
+                                    ),
+                                    pd.Text('${(subTotal * 18) / 100} Rs.'),
+                                    pd.SizedBox(
+                                      height: 8,
+                                    ),
+                                    pd.Text(
+                                        '${subTotal + (subTotal * 18) / 100} Rs.'),
+                                  ]),
+                            ],
                           ),
                         ],
                       ),
@@ -239,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 await Printing.layoutPdf(
                     onLayout: (format) async => pdf.save());
-
               },
               child: Container(
                 alignment: Alignment.center,
@@ -279,7 +296,6 @@ titleBox(String title) {
   );
 }
 
-
 cellBox(int index, String data) {
   return pd.Container(
     alignment: pd.Alignment.center,
@@ -296,4 +312,3 @@ cellBox(int index, String data) {
     ),
   );
 }
-
